@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;background:#07060A;color:#F6F4F8;-webkit-font-smoothing:antialiased}
+body{font-family:'Raleway',system-ui,sans-serif;font-variant-numeric:lining-nums tabular-nums;font-feature-settings:"lnum" 1,"tnum" 1;overscroll-behavior:none}
+a{color:#C7AEFF;text-decoration:none}
+a:hover{color:#F6F4F8}
+::selection{background:#6D35E8;color:#F6F4F8}
+button{font:inherit;color:inherit}
+*:focus-visible{outline:2px solid #A15CFF;outline-offset:4px}
+@media (pointer:fine){html.ce-cursor,html.ce-cursor *{cursor:none !important}}
+</style>
+<script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
+<script src="./race-engine.js"></script>
+<script src="./image-slot.js"></script>
+<script src="./case-studies.js"></script>
+</helmet>
+
+<div ref="{{ stageRef }}" aria-hidden="true" style="position:fixed;inset:0;z-index:0;background:#07060A"></div>
+
+<main style="position:relative;z-index:2;opacity:{{ mainOp }};transition:opacity .6s ease">
+
+  <section data-seg="0" data-screen-label="01 Hero" style="position:relative;height:100vh">
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;gap:32px;overflow:hidden;padding:clamp(80px,13vh,150px) clamp(20px,5.5vw,80px) clamp(96px,14vh,128px);opacity:{{ heroOp }};transform:translateY({{ heroTY }});pointer-events:{{ heroPE }};transition:opacity .9s ease, transform .9s ease">
+      <div style="display:flex;flex-direction:column;gap:22px;max-width:780px">
+        <div style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;color:#A15CFF">DRIVER / 01</div>
+        <h1 style="margin:0;font-weight:600;font-size:clamp(48px,min(9.4vw,15vh),124px);line-height:.86;letter-spacing:-.045em;text-transform:uppercase">Claire<br>Erhuanga</h1>
+        <div style="display:flex;flex-direction:column;gap:14px;max-width:520px;padding-top:6px">
+          <div style="font-size:14px;font-weight:500;letter-spacing:.16em">MULTIDISCIPLINARY DESIGNER</div>
+          <p style="margin:0;font-size:clamp(16px,1.2vw,18px);line-height:1.5;color:#AAA5AF;text-wrap:pretty">I design thoughtful digital experiences where clarity, creativity and technology meet.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:#AAA5AF;padding-top:4px">
+            <span style="white-space:nowrap">UI/UX</span><span style="color:#6D35E8">/</span><span style="white-space:nowrap">VISUAL DESIGN</span><span style="color:#6D35E8">/</span><span style="white-space:nowrap">CREATIVE TECHNOLOGY</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px">
+        <button type="button" aria-label="Press and hold to start the engine" data-cursor="GO" onPointerDown="{{ holdStart }}" onPointerUp="{{ holdEnd }}" onPointerLeave="{{ holdEnd }}" onPointerCancel="{{ holdEnd }}" onKeyDown="{{ holdKey }}" onKeyUp="{{ holdEnd }}" onContextMenu="{{ noMenu }}" style="display:flex;align-items:center;gap:18px;background:none;border:0;padding:0;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;min-height:64px">
+          <span style="position:relative;width:64px;height:64px;display:block;flex:none">
+            <svg width="64" height="64" viewBox="0 0 64 64" style="position:absolute;inset:0;transform:rotate(-90deg)">
+              <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(246,244,248,.2)" style="stroke-width:1px"></circle>
+              <circle ref="{{ ringRef }}" cx="32" cy="32" r="26" fill="none" stroke="#8247FF" style="stroke-width:2px;stroke-dasharray:163.4;stroke-dashoffset:163.4"></circle>
+            </svg>
+            <span style="position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#A15CFF;box-shadow:0 0 14px #8247FF"></span>
+          </span>
+          <span style="display:flex;flex-direction:column;gap:6px;text-align:left">
+            <span style="font-size:15px;font-weight:600;letter-spacing:.18em">HOLD TO START</span>
+            <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.12em;color:#726D79;white-space:nowrap">PRESS &amp; HOLD · OR HOLD SPACE</span>
+          </span>
+        </button>
+      </div>
+    </div>
+    <div style="position:absolute;left:0;right:0;bottom:clamp(48px,10vh,96px);display:flex;flex-direction:column;align-items:center;gap:14px;opacity:{{ scrollHintOp }};transition:opacity .8s;pointer-events:none">
+      <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#C7AEFF;white-space:nowrap">SCROLL TO DRIVE</span>
+      <span style="width:1px;height:48px;background:linear-gradient(#8247FF,rgba(130,71,255,0))"></span>
+    </div>
+  </section>
+
+  <section data-seg="1" data-screen-label="02 About" style="position:relative">
+    <div style="height:95vh;display:flex;align-items:center;padding:0 clamp(20px,5.5vw,80px)">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.2em;color:#A15CFF">ENTERING</span>
+        <span style="font-size:clamp(36px,5vw,64px);font-weight:600;letter-spacing:-.03em;line-height:.95">CLAIRE'S WORLD</span>
+      </div>
+    </div>
+    <div data-anchor="1" style="min-height:100vh;display:flex;align-items:center;padding:0 clamp(20px,5.5vw,80px)">
+      <div style="display:flex;flex-direction:column;gap:28px;max-width:760px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;color:#A15CFF">ABOUT / 02</span>
+        <h2 style="margin:0;font-weight:600;font-size:clamp(48px,6.4vw,92px);line-height:.9;letter-spacing:-.04em">THE PERSON<br>BEHIND THE WORK.</h2>
+      </div>
+    </div>
+    <div style="padding:16vh clamp(20px,5.5vw,80px);background:linear-gradient(180deg,rgba(7,6,10,0) 0%,rgba(7,6,10,.9) 14%,rgba(7,6,10,.9) 86%,rgba(7,6,10,0) 100%)">
+      <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(40px,7vw,120px);align-items:start">
+        <div data-cursor="VIEW" style="position:relative;aspect-ratio:4/5;width:100%;max-width:520px;margin-top:-8vh">
+          <image-slot id="claire-portrait" shape="rect" placeholder="Drop a portrait of Claire" style="position:absolute;inset:0"></image-slot>
+          <span style="position:absolute;left:0;bottom:-30px;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:#726D79">DRIVER / CLAIRE ERHUANGA</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:26px;max-width:560px;font-size:clamp(16px,1.25vw,18px);line-height:1.62;color:#AAA5AF">
+          <p style="margin:0;font-size:clamp(20px,1.8vw,26px);line-height:1.4;color:#F6F4F8;text-wrap:pretty">I'm Claire Erhuanga, a multidisciplinary designer with a background in Software Engineering and a strong interest in creating digital experiences that feel intuitive, useful and visually considered.</p>
+          <p style="margin:0;text-wrap:pretty">My work sits across UI/UX design, visual communication, creative technology and digital storytelling. I enjoy understanding how people interact with products, identifying where experiences become unnecessarily difficult and designing clearer ways forward.</p>
+          <p style="margin:0;text-wrap:pretty">Beyond UI/UX, I explore video editing, graphic design, UX writing, logo design and vibe coding, allowing me to approach digital experiences from several creative perspectives.</p>
+          <p style="margin:0;text-wrap:pretty">Outside design, I love racing games — the speed, precision, environments and constant pursuit of a better line. That fascination inspired this portfolio.</p>
+        </div>
+      </div>
+    </div>
+    <div style="min-height:90vh;display:flex;align-items:center;padding:0 clamp(20px,5.5vw,80px)">
+      <p style="margin:0;font-weight:600;font-size:clamp(40px,6.8vw,104px);line-height:.92;letter-spacing:-.04em">DESIGN IS THE CRAFT.<br><span style="color:#C7AEFF">RACING IS THE LANGUAGE.</span></p>
+    </div>
+  </section>
+
+  <section data-seg="2" data-screen-label="03 What I Do" style="position:relative">
+    <div style="height:90vh;display:flex;align-items:center;justify-content:flex-end;padding:0 clamp(20px,5.5vw,80px)">
+      <div style="display:flex;flex-direction:column;gap:10px;padding:22px 26px;border:1px solid rgba(199,174,255,.35);background:rgba(7,6,10,.55);min-width:240px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#AAA5AF">NEXT EXIT</span>
+        <span style="font-size:clamp(26px,3vw,40px);font-weight:600;letter-spacing:-.02em;line-height:1">CREATIVE<br>DISTRICT</span>
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:13px;color:#A15CFF">↗ 400 M</span>
+      </div>
+    </div>
+    <div ref="{{ svcTrack }}" data-anchor="2" style="position:relative;height:600vh">
+      <div style="position:sticky;top:0;height:100vh;overflow:hidden">
+        <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,6,10,.92) 0%,rgba(7,6,10,.7) 38%,rgba(7,6,10,0) 64%);pointer-events:none"></div>
+        <div style="position:absolute;left:clamp(20px,5.5vw,80px);top:clamp(96px,14vh,140px);font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;color:#A15CFF">WHAT I DO / 03</div>
+        <sc-for list="{{ services }}" as="s" hint-placeholder-count="1">
+          <div style="position:absolute;left:clamp(20px,5.5vw,80px);right:clamp(20px,5.5vw,80px);top:50%;max-width:600px;display:flex;flex-direction:column;gap:22px;opacity:{{ s.op }};transform:translateY(calc(-50% + {{ s.ty }}));transition:opacity .6s ease, transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none">
+            <span style="font-size:clamp(80px,11vw,156px);font-weight:500;line-height:.8;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px #8247FF">{{ s.num }}</span>
+            <h3 style="margin:0;font-weight:600;font-size:clamp(40px,5.2vw,72px);line-height:.92;letter-spacing:-.035em">{{ s.title }}</h3>
+            <p style="margin:0;max-width:460px;font-size:clamp(16px,1.25vw,18px);line-height:1.6;color:#AAA5AF;text-wrap:pretty">{{ s.desc }}</p>
+            <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.14em;color:#726D79">{{ s.tags }}</span>
+          </div>
+        </sc-for>
+        <div style="position:absolute;right:clamp(20px,5.5vw,80px);bottom:clamp(96px,14vh,128px);display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+            <div style="display:flex;align-items:center;gap:12px;justify-content:flex-end;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.14em;color:{{ s.idxColor }};transition:color .4s">
+              <span>{{ s.short }}</span>
+              <span style="width:24px;height:1px;background:{{ s.idxBar }};transition:background .4s"></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-seg="3" data-screen-label="04 Process" style="position:relative">
+    <div style="height:90vh;display:flex;align-items:center;padding:0 clamp(20px,5.5vw,80px)">
+      <div style="display:flex;flex-direction:column;gap:10px;padding:22px 26px;border:1px solid rgba(199,174,255,.35);background:rgba(7,6,10,.55);min-width:240px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#AAA5AF">TEST FACILITY</span>
+        <span style="font-size:clamp(26px,3vw,40px);font-weight:600;letter-spacing:-.02em;line-height:1">UI/UX LAB</span>
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:13px;color:#A15CFF">↑ GATE OPEN</span>
+      </div>
+    </div>
+    <div data-anchor="3" style="min-height:100vh;display:flex;align-items:center;padding:0 clamp(20px,5.5vw,80px);background:linear-gradient(90deg,rgba(7,6,10,.8),rgba(7,6,10,0) 70%)">
+      <div style="display:flex;flex-direction:column;gap:26px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;color:#A15CFF">PROCESS / 04</span>
+        <h2 style="margin:0;font-weight:600;font-size:clamp(56px,8vw,120px);line-height:.88;letter-spacing:-.045em">HOW I<br>DESIGN.</h2>
+        <p style="margin:0;font-size:clamp(18px,1.6vw,22px);color:#AAA5AF">Good experiences aren't created in one lap.</p>
+      </div>
+    </div>
+    <div ref="{{ procTrack }}" style="position:relative;height:600vh">
+      <div style="position:sticky;top:0;height:100vh;overflow:hidden">
+        <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,6,10,.94) 0%,rgba(7,6,10,.75) 42%,rgba(7,6,10,.2) 70%,rgba(7,6,10,.6) 100%);pointer-events:none"></div>
+        <sc-for list="{{ sectors }}" as="x" hint-placeholder-count="1">
+          <div style="position:absolute;left:clamp(20px,5.5vw,80px);right:clamp(20px,5.5vw,80px);top:{{ procTop }};max-width:560px;display:flex;flex-direction:column;gap:20px;opacity:{{ x.op }};transform:translateY(calc(-50% + {{ x.ty }}));transition:opacity .6s ease, transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none">
+            <div style="display:flex;gap:16px;flex-wrap:wrap;font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.16em">
+              <span style="color:#A15CFF">{{ x.lab }}</span><span style="color:#726D79">{{ x.sub }}</span>
+            </div>
+            <h3 style="margin:0;font-weight:600;font-size:clamp(44px,6vw,88px);line-height:.9;letter-spacing:-.04em">{{ x.title }}</h3>
+            <p style="margin:0;max-width:440px;font-size:clamp(16px,1.25vw,18px);line-height:1.6;color:#AAA5AF;text-wrap:pretty">{{ x.body }}</p>
+            <sc-if value="{{ x.hasList }}" hint-placeholder-val="{{ false }}">
+              <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;line-height:1.9;letter-spacing:.12em;color:#726D79;max-width:440px">{{ x.listStr }}</span>
+            </sc-if>
+            <sc-if value="{{ x.branch }}" hint-placeholder-val="{{ false }}">
+              <svg viewBox="0 0 320 90" style="width:100%;max-width:340px;height:auto;overflow:visible">
+                <path d="M0 45 L80 45 C120 45 130 10 180 10 L320 10" fill="none" stroke="#3A3542" style="stroke-width:2px"></path>
+                <path d="M0 45 L80 45 C120 45 130 80 180 80 L320 80" fill="none" stroke="#3A3542" style="stroke-width:2px"></path>
+                <path d="M0 45 L320 45" fill="none" stroke="{{ branchColor }}" style="stroke-width:3px;transition:stroke .5s"></path>
+                <circle cx="80" cy="45" r="4" fill="#C7AEFF"></circle>
+              </svg>
+            </sc-if>
+            <sc-if value="{{ x.laps }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:460px">
+                <sc-for list="{{ laps }}" as="l" hint-placeholder-count="3">
+                  <div style="display:flex;flex-direction:column;gap:10px;padding-top:12px;border-top:2px solid {{ l.line }};transition:border-color .4s">
+                    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.14em;color:{{ l.color }}">{{ l.n }}</span>
+                    <span style="font-size:15px;line-height:1.3;color:{{ l.text }}">{{ l.t }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ x.tele }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:12px;max-width:420px">
+                <sc-for list="{{ tele }}" as="t" hint-placeholder-count="5">
+                  <div style="display:grid;grid-template-columns:120px minmax(0,1fr);align-items:center;gap:16px">
+                    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.14em;color:#AAA5AF">{{ t.k }}</span>
+                    <span style="height:2px;background:rgba(246,244,248,.1);position:relative">
+                      <span style="position:absolute;left:0;top:0;bottom:0;width:{{ t.w }};background:#8247FF;transition:width .5s ease"></span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ x.iter }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:26px">
+                <svg viewBox="0 0 320 70" style="width:100%;max-width:340px;height:auto;overflow:visible">
+                  <path d="M0 50 C60 50 90 20 150 30 C210 40 250 62 320 55" fill="none" stroke="#5A5560" style="stroke-width:2px;stroke-dasharray:6 6"></path>
+                  <path d="M0 50 C80 50 120 14 190 14 C250 14 280 20 320 20" fill="none" stroke="#8247FF" style="stroke-width:3px"></path>
+                </svg>
+                <p style="margin:0;font-weight:600;font-size:clamp(28px,3.2vw,44px);line-height:.98;letter-spacing:-.03em;color:#F6F4F8">EVERY LAP TEACHES<br>YOU SOMETHING.</p>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+        <div style="position:absolute;right:clamp(20px,5.5vw,80px);bottom:clamp(88px,13vh,120px);width:min(400px,calc(100% - 40px));display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em">
+            <span style="color:#AAA5AF">TEST CIRCUIT</span><span style="color:#F6F4F8">{{ sectorCount }}</span>
+          </div>
+          <svg viewBox="0 0 400 240" style="width:100%;height:auto;overflow:visible">
+            <path d="M70 220 L290 220 C340 220 350 170 315 145 L240 100 C210 82 220 40 260 40 L300 40 C335 40 345 12 310 12 L100 12 C55 12 36 45 36 85 L36 190 C36 210 50 220 70 220 Z" fill="none" stroke="rgba(246,244,248,.14)" style="stroke-width:6px;stroke-linejoin:round"></path>
+            <path ref="{{ procPath }}" d="M70 220 L290 220 C340 220 350 170 315 145 L240 100 C210 82 220 40 260 40 L300 40 C335 40 345 12 310 12 L100 12 C55 12 36 45 36 85 L36 190 C36 210 50 220 70 220 Z" fill="none" stroke="#8247FF" style="stroke-width:2px;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(130,71,255,.8))"></path>
+            <rect x="66" y="208" width="3" height="24" fill="#F6F4F8"></rect>
+            <circle ref="{{ procDot }}" cx="70" cy="220" r="6" fill="#F6F4F8" stroke="#8247FF" style="stroke-width:3px"></circle>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-seg="4" data-screen-label="05 Projects" style="position:relative">
+    <div style="height:80vh;display:flex;align-items:center;justify-content:flex-end;padding:0 clamp(20px,5.5vw,80px)">
+      <div style="display:flex;flex-direction:column;gap:10px;padding:22px 26px;border:1px solid rgba(199,174,255,.35);background:rgba(7,6,10,.55);min-width:240px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#AAA5AF">LAP COMPLETE · EXIT</span>
+        <span style="font-size:clamp(26px,3vw,40px);font-weight:600;letter-spacing:-.02em;line-height:1">PROJECT<br>DISTRICT</span>
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:13px;color:#A15CFF">↑ 4 ROUTES</span>
+      </div>
+    </div>
+    <div data-anchor="4" style="min-height:100vh;padding:clamp(96px,14vh,140px) clamp(20px,5.5vw,80px) clamp(64px,10vh,96px);background:radial-gradient(ellipse at 60% 50%,rgba(7,6,10,.35),rgba(7,6,10,.85) 75%);box-sizing:border-box">
+      <div style="max-width:1320px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,72px);align-items:center">
+        <div style="display:flex;flex-direction:column;gap:clamp(32px,6vh,64px)">
+          <div style="display:flex;flex-direction:column;gap:22px">
+            <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;color:#A15CFF">SELECTED WORK / 05</span>
+            <h2 style="margin:0;font-weight:600;font-size:clamp(48px,6vw,88px);line-height:.9;letter-spacing:-.04em">CHOOSE A<br>DESTINATION.</h2>
+            <p style="margin:0;max-width:400px;font-size:clamp(16px,1.25vw,18px);line-height:1.55;color:#AAA5AF">Four projects. Four problems. Four different design journeys.</p>
+          </div>
+          <sc-if value="{{ desktopMap }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:14px;padding-top:22px;border-top:1px solid rgba(246,244,248,.12);max-width:420px">
+              <div style="display:flex;justify-content:space-between;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em">
+                <span style="color:#726D79">DESTINATION</span>
+                <span style="color:{{ hudStatusColor }}">{{ hudStatus }}</span>
+              </div>
+              <span style="font-size:clamp(32px,3.6vw,52px);font-weight:600;letter-spacing:-.03em;line-height:.95;color:{{ hudNameColor }}">{{ hudName }}</span>
+              <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.14em;color:#AAA5AF">{{ hudRoute }}</span>
+              <button type="button" data-cursor="DRIVE" onClick="{{ drive }}" aria-disabled="{{ driveDisabled }}" style="align-self:flex-start;margin-top:10px;display:flex;align-items:center;gap:14px;min-height:52px;padding:0 26px;background-color:#6D35E8;background-image:linear-gradient(#C7AEFF,#C7AEFF);background-repeat:no-repeat;background-position:left bottom;background-size:0% 2px;border:0;color:#F6F4F8;font-size:14px;font-weight:600;letter-spacing:.18em;cursor:pointer;opacity:{{ driveOp }};transition:background-size .45s ease, opacity .3s" style-hover="background-size:100% 2px">DRIVE <span style="font-family:'Raleway',sans-serif;font-weight:600">→</span></button>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ desktopMap }}" hint-placeholder-val="{{ true }}">
+          <div style="position:relative;width:100%;aspect-ratio:800/520">
+            <svg viewBox="0 0 800 520" style="position:absolute;inset:0;width:100%;height:100%;overflow:visible">
+              <path d="M400 540 L400 360" fill="none" stroke="#4A4552" style="stroke-width:6px;stroke-linecap:round"></path>
+              <path d="M400 520 L400 360" fill="none" stroke="rgba(246,244,248,.35)" style="stroke-width:1px;stroke-dasharray:8 10"></path>
+              <sc-for list="{{ routes }}" as="r" hint-placeholder-count="4">
+                <g data-cursor="DRIVE" onClick="{{ r.pick }}" style="cursor:pointer;opacity:{{ r.op }};transition:opacity .4s">
+                  <path d="{{ r.d }}" fill="none" stroke="transparent" style="stroke-width:28px"></path>
+                  <path d="{{ r.d }}" fill="none" stroke="{{ r.stroke }}" style="stroke-width:{{ r.sw }};stroke-linecap:round;stroke-linejoin:round;filter:{{ r.glow }};transition:stroke .4s" style-hover="stroke:#C7AEFF"></path>
+                  <circle cx="{{ r.ex }}" cy="{{ r.ey }}" r="9" fill="#07060A" stroke="{{ r.dot }}" style="stroke-width:2px"></circle>
+                  <circle cx="{{ r.ex }}" cy="{{ r.ey }}" r="3" fill="{{ r.dot }}"></circle>
+                </g>
+              </sc-for>
+              <circle cx="400" cy="360" r="5" fill="#F6F4F8"></circle>
+              <circle cx="400" cy="500" r="7" fill="#A15CFF" style="filter:drop-shadow(0 0 8px #8247FF)"></circle>
+            </svg>
+            <sc-for list="{{ routes }}" as="r" hint-placeholder-count="4">
+              <button type="button" data-cursor="DRIVE" onClick="{{ r.pick }}" aria-pressed="{{ r.pressed }}" style="position:absolute;left:{{ r.left }};top:{{ r.top }};transform:translate(-50%,calc(-100% - 18px));display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 8px;background:none;border:0;cursor:pointer;white-space:nowrap">
+                <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:10px;letter-spacing:.16em;color:#726D79">{{ r.route }}</span>
+                <span style="font-size:clamp(13px,1.2vw,17px);font-weight:600;letter-spacing:.06em;color:{{ r.labelColor }};transition:color .3s">{{ r.name }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ mobileMap }}" hint-placeholder-val="{{ false }}">
+          <div onTouchStart="{{ tStart }}" onTouchEnd="{{ tEnd }}" style="display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em">
+              <span style="color:#A15CFF">{{ mSel.routeOf }}</span>
+              <div style="display:flex;gap:8px">
+                <button type="button" aria-label="Previous destination" onClick="{{ prevRoute }}" style="width:44px;height:44px;background:none;border:1px solid rgba(246,244,248,.2);cursor:pointer">←</button>
+                <button type="button" aria-label="Next destination" onClick="{{ nextRoute }}" style="width:44px;height:44px;background:none;border:1px solid rgba(246,244,248,.2);cursor:pointer">→</button>
+              </div>
+            </div>
+            <span style="font-size:clamp(36px,11vw,56px);font-weight:600;letter-spacing:-.03em;line-height:.92">{{ mSel.name }}</span>
+            <div style="position:relative;aspect-ratio:4/3;width:100%">
+              <image-slot id="{{ mSel.slot }}" shape="rect" placeholder="Drop a project preview" style="position:absolute;inset:0"></image-slot>
+            </div>
+            <svg viewBox="80 80 640 300" style="width:100%;height:auto">
+              <path d="M400 380 L400 360" fill="none" stroke="#4A4552" style="stroke-width:6px"></path>
+              <path d="{{ mSel.d }}" fill="none" stroke="#8247FF" style="stroke-width:4px;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 6px rgba(130,71,255,.9))"></path>
+            </svg>
+            <button type="button" onClick="{{ drive }}" style="display:flex;align-items:center;justify-content:center;gap:14px;min-height:56px;background:#6D35E8;border:0;color:#F6F4F8;font-size:14px;font-weight:600;letter-spacing:.18em;cursor:pointer">DRIVE →</button>
+          </div>
+        </sc-if>
+      </div>
+      <div style="max-width:1320px;margin:clamp(56px,10vh,96px) auto 0;display:flex;justify-content:flex-end">
+        <button type="button" data-cursor="GO" onClick="{{ continueJourney }}" style="display:flex;align-items:center;gap:14px;min-height:44px;padding:0 0 6px;background-color:transparent;background-image:linear-gradient(#8247FF,#8247FF);background-repeat:no-repeat;background-position:left bottom;background-size:24px 1px;border:0;font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;color:#F6F4F8;cursor:pointer;transition:background-size .45s ease" style-hover="background-size:100% 1px">CONTINUE JOURNEY <span>↓</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section data-seg="5" data-screen-label="06 Work With Me" style="position:relative">
+    <div style="height:90vh;display:flex;align-items:center;justify-content:flex-end;padding:0 clamp(20px,5.5vw,80px)">
+      <div style="display:flex;flex-direction:column;gap:10px;padding:22px 26px;border:1px solid rgba(199,174,255,.35);background:rgba(7,6,10,.45);min-width:240px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#AAA5AF">COAST ROAD</span>
+        <span style="font-size:clamp(26px,3vw,40px);font-weight:600;letter-spacing:-.02em;line-height:1">FINAL<br>HIGHWAY</span>
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:13px;color:#A15CFF">↑ CONTINUE</span>
+      </div>
+    </div>
+    <div data-anchor="5" style="min-height:110vh;display:flex;align-items:center;padding:0 clamp(20px,5.5vw,80px);background:linear-gradient(90deg,rgba(7,6,10,.7),rgba(7,6,10,0) 65%)">
+      <div style="display:flex;flex-direction:column;gap:28px;max-width:720px">
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;color:#C7AEFF">FINAL DESTINATION</span>
+        <h2 style="margin:0;font-weight:600;font-size:clamp(52px,7.4vw,112px);line-height:.88;letter-spacing:-.045em">LET'S BUILD<br>SOMETHING GREAT.</h2>
+        <p style="margin:0;font-size:clamp(20px,1.8vw,26px);color:#F6F4F8">Have an idea worth taking for a spin?</p>
+        <p style="margin:0;max-width:480px;font-size:clamp(16px,1.25vw,18px);line-height:1.6;color:#AAA5AF;text-wrap:pretty">I'm open to thoughtful design projects, creative collaborations and opportunities to build digital experiences that solve meaningful problems.</p>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(24px,4vw,48px);padding-top:10px">
+          <a href="mailto:hello@claireerhuanga.com" data-cursor="GO" style="display:flex;align-items:center;gap:14px;min-height:56px;padding:0 30px;background-color:#6D35E8;background-image:linear-gradient(#C7AEFF,#C7AEFF);background-repeat:no-repeat;background-position:left bottom;background-size:0% 2px;color:#F6F4F8;font-size:14px;font-weight:600;letter-spacing:.18em;transition:background-size .45s ease" style-hover="background-size:100% 2px;color:#F6F4F8">WORK WITH ME <span style="font-family:'Raleway',sans-serif;font-weight:600">→</span></a>
+          <div style="display:flex;gap:28px;flex-wrap:wrap;font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.16em">
+            <a href="mailto:hello@claireerhuanga.com" style="color:#AAA5AF;min-height:44px;display:flex;align-items:center" style-hover="color:#F6F4F8">EMAIL ↗</a>
+            <a href="#" style="color:#AAA5AF;min-height:44px;display:flex;align-items:center" style-hover="color:#F6F4F8">LINKEDIN ↗</a>
+            <a href="#" style="color:#AAA5AF;min-height:44px;display:flex;align-items:center" style-hover="color:#F6F4F8">VIEW CV ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-seg="6" data-screen-label="07 Finish" style="position:relative;height:170vh"></section>
+</main>
+
+<header style="position:fixed;left:0;right:0;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:22px clamp(20px,5.5vw,80px);opacity:{{ hudOp }};pointer-events:{{ hudPE }};transition:opacity .8s;background:linear-gradient(180deg,rgba(7,6,10,.7),rgba(7,6,10,0))">
+  <button type="button" onClick="{{ goTop }}" aria-label="Back to start" style="background:none;border:0;padding:0;font-size:20px;font-weight:600;letter-spacing:-.02em;cursor:pointer;min-height:44px">CE<span style="color:#8247FF">.</span></button>
+  <sc-if value="{{ desktopNav }}" hint-placeholder-val="{{ true }}">
+    <nav aria-label="Sections" style="display:flex;gap:clamp(16px,2.4vw,40px)">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+        <button type="button" onClick="{{ n.go }}" style="position:relative;background:none;border:0;padding:12px 0;cursor:pointer;white-space:nowrap;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ n.color }};transition:color .3s" style-hover="color:#F6F4F8">
+          {{ n.label }}
+          <span style="position:absolute;left:0;right:0;bottom:4px;height:1px;background:#8247FF;transform:scaleX({{ n.bar }});transform-origin:left;transition:transform .45s ease"></span>
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+  <div style="display:flex;align-items:center;gap:18px;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em">
+    <span style="color:#F6F4F8;white-space:nowrap">{{ counter }}<span style="color:#726D79"> / 06</span></span>
+    <sc-if value="{{ mobileNav }}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{ openMenu }}" style="min-height:44px;min-width:44px;background:none;border:0;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;cursor:pointer">MENU</button>
+    </sc-if>
+  </div>
+</header>
+
+<div aria-hidden="true" ref="{{ vigRef }}" style="position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 55%,rgba(7,6,10,0) 48%,rgba(7,6,10,.55) 100%)"></div>
+
+<div style="position:fixed;left:clamp(16px,4vw,64px);bottom:20px;z-index:20;display:flex;align-items:center;gap:16px;opacity:{{ hudDriveOp }};transition:opacity .8s;pointer-events:none">
+  <sc-if value="{{ hudGame }}" hint-placeholder-val="{{ true }}">
+    <div style="position:relative;width:{{ mapSize }};height:{{ mapSize }};border-radius:50%;background:rgba(7,6,10,.62);border:1px solid rgba(199,174,255,.28);overflow:hidden;flex:none">
+      <svg viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%">
+        <path d="M50 94 C22 84 16 64 38 54 C60 44 84 42 78 26 C72 10 44 6 26 16" fill="none" stroke="rgba(246,244,248,.16)" style="stroke-width:5px;stroke-linecap:round"></path>
+        <path ref="{{ mapPath }}" d="M50 94 C22 84 16 64 38 54 C60 44 84 42 78 26 C72 10 44 6 26 16" fill="none" stroke="#8247FF" style="stroke-width:2.5px;stroke-linecap:round"></path>
+        <sc-for list="{{ mapNodes }}" as="mn" hint-placeholder-count="6">
+          <circle cx="{{ mn.x }}" cy="{{ mn.y }}" r="2.6" fill="{{ mn.fill }}"></circle>
+        </sc-for>
+        <circle ref="{{ mapDot }}" cx="50" cy="94" r="4.5" fill="#F6F4F8" stroke="#8247FF" style="stroke-width:2px"></circle>
+      </svg>
+    </div>
+  </sc-if>
+  <div style="display:flex;flex-direction:column;gap:5px">
+    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:10px;letter-spacing:.18em;color:#AAA5AF;white-space:nowrap">CURRENT LOCATION</span>
+    <span style="font-size:13px;font-weight:600;letter-spacing:.12em;white-space:nowrap">{{ location }}</span>
+  </div>
+</div>
+
+<div style="position:fixed;right:clamp(16px,4vw,64px);bottom:16px;z-index:20;display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;opacity:{{ hudDriveOp }};pointer-events:{{ hudPE }};transition:opacity .8s">
+  <sc-if value="{{ hudGame }}" hint-placeholder-val="{{ true }}">
+    <div aria-hidden="true" style="position:relative;width:{{ gaugeSize }};height:{{ gaugeSize }}">
+      <svg viewBox="0 0 120 120" style="position:absolute;inset:0;width:100%;height:100%">
+        <circle cx="60" cy="60" r="56" fill="rgba(7,6,10,.62)"></circle>
+        <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(246,244,248,.12)" transform="rotate(135 60 60)" style="stroke-width:6px;stroke-dasharray:226.2 301.6"></circle>
+        <circle ref="{{ gaugeArc }}" cx="60" cy="60" r="48" fill="none" stroke="#8247FF" transform="rotate(135 60 60)" style="stroke-width:6px;stroke-dasharray:0 301.6;filter:drop-shadow(0 0 4px rgba(130,71,255,.9))"></circle>
+        <sc-for list="{{ ticks }}" as="tk" hint-placeholder-count="0">
+          <line x1="{{ tk.x1 }}" y1="{{ tk.y1 }}" x2="{{ tk.x2 }}" y2="{{ tk.y2 }}" stroke="{{ tk.c }}" style="stroke-width:1.5px"></line>
+        </sc-for>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding-top:6px">
+        <span ref="{{ speedRef }}" style="font-family:'Raleway',sans-serif;font-size:{{ gaugeFont }};font-weight:600;letter-spacing:-.02em;line-height:1;color:#F6F4F8">000</span>
+        <span style="font-size:9px;letter-spacing:.18em;color:#AAA5AF">KM/H</span>
+        <span style="font-size:10px;letter-spacing:.12em;color:#C7AEFF;margin-top:4px;white-space:nowrap">GEAR <span ref="{{ gearRef }}">N</span></span>
+      </div>
+    </div>
+  </sc-if>
+  <div style="display:flex;align-items:center;gap:18px">
+    <sc-if value="{{ hudMinimal }}" hint-placeholder-val="{{ false }}">
+      <span aria-hidden="true" style="color:#AAA5AF;white-space:nowrap"><span ref="{{ speedRef }}" style="color:#F6F4F8">000</span> KM/H</span>
+    </sc-if>
+    <sc-if value="{{ showSteer }}" hint-placeholder-val="{{ false }}">
+      <span style="color:#726D79;white-space:nowrap">← → STEER</span>
+    </sc-if>
+    <button type="button" onClick="{{ toggleSound }}" aria-pressed="{{ sound }}" style="min-height:40px;background:none;border:0;padding:0;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;cursor:pointer;white-space:nowrap;color:{{ soundColor }}">{{ soundLabel }}</button>
+  </div>
+</div>
+
+<div aria-live="polite" style="position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#07060A;opacity:{{ loaderOp }};pointer-events:{{ loaderPE }};transition:opacity .6s">
+  <div style="display:flex;flex-direction:column;gap:16px;width:200px">
+    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.2em;color:#AAA5AF">{{ loadText }}</span>
+    <span style="height:1px;background:rgba(246,244,248,.1);position:relative">
+      <span style="position:absolute;left:0;top:0;bottom:0;width:{{ loadW }};background:#8247FF;transition:width .45s ease"></span>
+    </span>
+  </div>
+</div>
+
+<div style="position:fixed;left:clamp(20px,5.5vw,80px);bottom:clamp(40px,8vh,80px);z-index:30;display:flex;flex-direction:column;gap:10px;font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.2em;pointer-events:none">
+  <sc-for list="{{ introLines }}" as="il" hint-placeholder-count="0">
+    <span style="white-space:nowrap;opacity:{{ il.op }};color:{{ il.color }};transition:opacity .5s, color .5s">{{ il.t }}</span>
+  </sc-for>
+</div>
+<sc-if value="{{ showSkip }}" hint-placeholder-val="{{ false }}">
+  <button type="button" onClick="{{ skipIntro }}" style="position:fixed;right:clamp(20px,5.5vw,80px);bottom:clamp(32px,7vh,72px);z-index:31;min-height:44px;background:none;border:0;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;color:#AAA5AF;cursor:pointer;white-space:nowrap" style-hover="color:#F6F4F8">SKIP INTRO →</button>
+</sc-if>
+
+<div aria-live="assertive" style="position:fixed;inset:0;z-index:25;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px">
+  <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:13px;letter-spacing:.24em;color:#C7AEFF;opacity:{{ readyOp }};transition:opacity .4s">ENGINE READY</span>
+  <div style="display:flex;gap:clamp(14px,2.4vw,28px);opacity:{{ lightsOp }};transition:opacity .25s">
+    <sc-for list="{{ lights }}" as="lt" hint-placeholder-count="5">
+      <span style="width:clamp(22px,3vw,34px);height:clamp(22px,3vw,34px);border-radius:50%;background:{{ lt.bg }};box-shadow:{{ lt.glow }};transition:background .12s"></span>
+    </sc-for>
+  </div>
+  <span style="font-size:clamp(48px,8vw,112px);font-weight:600;letter-spacing:-.04em;opacity:{{ outOp }};transition:opacity .3s">LIGHTS OUT.</span>
+</div>
+
+<div style="position:fixed;inset:0;z-index:35;pointer-events:none;display:flex;align-items:flex-end;padding:0 clamp(20px,5.5vw,80px) clamp(96px,16vh,160px);background:linear-gradient(0deg,rgba(7,6,10,.7),rgba(7,6,10,0) 50%);opacity:{{ arriveOp }};transition:opacity .5s">
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.2em;color:#A15CFF">{{ arrive.label }}</span>
+    <span style="font-size:clamp(52px,9vw,128px);font-weight:600;letter-spacing:-.045em;line-height:.86">{{ arrive.name }}</span>
+    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.16em;color:#C7AEFF">{{ arrive.sub }}</span>
+  </div>
+</div>
+
+<sc-if value="{{ complete }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:36;display:flex;align-items:center;padding:0 clamp(20px,5.5vw,80px);background:linear-gradient(90deg,rgba(7,6,10,.86),rgba(7,6,10,.2) 70%)">
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:12px;letter-spacing:.2em;color:#A15CFF">RACE COMPLETE</span>
+      <span style="font-size:clamp(58px,9.4vw,124px);font-weight:600;letter-spacing:-.045em;line-height:.86">CLAIRE<br>ERHUANGA</span>
+      <span style="font-size:14px;font-weight:500;letter-spacing:.16em">MULTIDISCIPLINARY DESIGNER</span>
+      <p style="margin:0;font-size:clamp(18px,1.6vw,22px);color:#AAA5AF">Thanks for taking the ride.</p>
+      <button type="button" data-cursor="GO" onClick="{{ raceAgain }}" style="align-self:flex-start;margin-top:12px;display:flex;align-items:center;gap:12px;min-height:52px;padding:0 0 4px;background-color:transparent;background-image:linear-gradient(#8247FF,#8247FF);background-repeat:no-repeat;background-position:left bottom;background-size:28px 2px;border:0;font-size:14px;font-weight:600;letter-spacing:.18em;cursor:pointer;transition:background-size .45s ease" style-hover="background-size:100% 2px">RACE AGAIN ↻</button>
+    </div>
+  </div>
+</sc-if>
+
+<div ref="{{ flashRef }}" aria-hidden="true" style="position:fixed;inset:0;z-index:37;background:#F6F4F8;opacity:0;pointer-events:none"></div>
+
+<sc-if value="{{ menu }}" hint-placeholder-val="{{ false }}">
+  <div role="dialog" aria-label="Menu" style="position:fixed;inset:0;z-index:45;background:#07060A;display:flex;flex-direction:column;padding:22px 20px 40px;gap:40px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:20px;font-weight:600">CE<span style="color:#8247FF">.</span></span>
+      <button type="button" onClick="{{ closeMenu }}" style="min-height:44px;min-width:44px;background:none;border:0;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;cursor:pointer">CLOSE</button>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:6px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+        <button type="button" onClick="{{ n.go }}" style="display:flex;align-items:baseline;gap:16px;background:none;border:0;padding:10px 0;text-align:left;cursor:pointer;border-bottom:1px solid rgba(246,244,248,.08)">
+          <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;color:#A15CFF">{{ n.num }}</span>
+          <span style="font-size:34px;font-weight:600;letter-spacing:-.03em;color:{{ n.color }}">{{ n.label }}</span>
+        </button>
+      </sc-for>
+    </nav>
+  </div>
+</sc-if>
+
+<sc-if value="{{ csOpen }}" hint-placeholder-val="{{ false }}">
+  <div ref="{{ csRef }}" onScroll="{{ csScroll }}" data-screen-label="Case Study" aria-hidden="{{ csHidden }}" style="opacity:{{ csOp }};visibility:{{ csVisib }};pointer-events:{{ csPE }};transform:translateY({{ csTY }});transition:{{ csTr }};position:fixed;inset:0;z-index:40;overflow-y:auto;overflow-x:hidden;background:radial-gradient(ellipse at 70% 60%,rgba(7,6,10,0) 30%,rgba(7,6,10,.55) 100%);color:{{ csInk }}">
+    <div style="position:sticky;top:0;z-index:2;background:linear-gradient(180deg,rgba(7,6,10,.85),rgba(7,6,10,.55));border-bottom:1px solid {{ csRule }}">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(20px,5.5vw,80px);font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em">
+        <button type="button" onClick="{{ backToMap }}" data-cursor="GO" style="min-height:44px;background:none;border:0;padding:0;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;cursor:pointer;white-space:nowrap;color:{{ csInk }}">← PROJECT MAP</button>
+        <span style="color:{{ csT.accent }};white-space:nowrap">{{ csTopLabel }}</span>
+      </div>
+      <div style="height:2px;background:transparent">
+        <div ref="{{ csBar }}" style="height:2px;background:{{ csT.accent }};transform:scaleX(0);transform-origin:left"></div>
+      </div>
+    </div>
+
+    <div style="min-height:calc(100vh - 62px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(40px,8vh,96px) clamp(20px,5.5vw,80px) clamp(32px,6vh,64px);background:linear-gradient(90deg,rgba(7,6,10,.78) 0%,rgba(7,6,10,.35) 50%,rgba(7,6,10,0) 75%)">
+     <div style="width:100%;max-width:1320px;margin:0 auto">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="width:28px;height:1px;background:{{ csT.accent }}"></span>
+        <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;font-size:12px;color:{{ csT.accent }}">ARRIVED / {{ cs.route }}</span>
+      </div>
+      <h1 style="margin:20px 0 0;font-weight:700;font-size:clamp(56px,11vw,180px);line-height:.82;letter-spacing:-.05em;text-shadow:0 4px 40px rgba(7,6,10,.6)">{{ cs.title }}</h1>
+      <p style="margin:28px 0 0;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;font-size:clamp(12px,1vw,14px);color:{{ csT.muted }}">{{ cs.sub }}</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;max-width:960px;margin-top:clamp(32px,6vh,64px);padding-top:22px;border-top:1px solid {{ csT.rule }}">
+        <sc-for list="{{ cs.meta }}" as="m" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.muted }}">{{ m.k }}</span>
+            <span style="font-size:17px;font-weight:500;line-height:1.45">{{ m.v }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:clamp(28px,5vh,48px);display:flex;align-items:center;gap:12px;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.muted }}"><span style="width:1px;height:28px;background:{{ csT.accent }}"></span>SCROLL TO EXPLORE THE WORK</div>
+     </div>
+    </div>
+    <div style="background:linear-gradient(180deg,rgba(7,6,10,0) 0,{{ csT.panel }} 220px);">
+    <div style="max-width:1320px;margin:0 auto;padding:clamp(24px,5vh,56px) clamp(20px,5.5vw,80px) 0">
+      <div data-cursor="VIEW" style="position:relative;aspect-ratio:{{ cs.heroRatio }};outline:1px solid {{ csT.rule }};outline-offset:10px">
+        <image-slot id="{{ cs.heroId }}" src="{{ cs.heroSrc }}" shape="rect" placeholder="Drop the project hero visual" style="position:absolute;inset:0"></image-slot>
+        <span style="position:absolute;left:-10px;top:-10px;width:22px;height:22px;border-left:2px solid {{ csT.accent }};border-top:2px solid {{ csT.accent }};pointer-events:none"></span>
+        <span style="position:absolute;right:-10px;bottom:-10px;width:22px;height:22px;border-right:2px solid {{ csT.accent }};border-bottom:2px solid {{ csT.accent }};pointer-events:none"></span>
+      </div>
+    </div>
+
+    <sc-if value="{{ mobileNav }}" hint-placeholder-val="{{ false }}">
+      <div style="position:sticky;top:61px;z-index:1;background:rgba(7,6,10,.9);padding:12px 20px;border-bottom:1px solid {{ csT.rule }};font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.accent }}">{{ csIndicator }}</div>
+    </sc-if>
+
+    <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,12vh,140px) clamp(20px,5.5vw,80px);display:grid;grid-template-columns:{{ csCols }};gap:clamp(32px,6vw,96px)">
+      <sc-if value="{{ desktopNav }}" hint-placeholder-val="{{ true }}">
+        <nav aria-label="Case study sections" style="position:sticky;top:110px;align-self:start;display:flex;flex-direction:column;gap:4px">
+          <sc-for list="{{ csNav }}" as="c" hint-placeholder-count="5">
+            <button type="button" onClick="{{ c.go }}" style="display:flex;align-items:center;gap:12px;min-height:40px;background:none;border:0;padding:0;cursor:pointer;font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ c.color }};transition:color .3s;text-align:left;white-space:nowrap">
+              <span style="width:{{ c.w }};height:1px;background:{{ c.color }};transition:width .4s ease, background .3s"></span>{{ c.num }} {{ c.key }}
+            </button>
+          </sc-for>
+        </nav>
+      </sc-if>
+      <div style="display:flex;flex-direction:column;gap:clamp(96px,16vh,180px);min-width:0">
+        <sc-for list="{{ csSections }}" as="c" hint-placeholder-count="5">
+          <article data-cs="{{ c.num }}" style="display:flex;flex-direction:column;gap:26px">
+            <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.accent }}">SECTOR {{ c.num }} · {{ c.key }}</span>
+            <h2 style="margin:0;max-width:820px;font-weight:700;font-size:clamp(34px,4.4vw,64px);line-height:1.02;letter-spacing:-.03em;text-wrap:balance">{{ c.title }}</h2>
+            <sc-for list="{{ c.paras }}" as="p" hint-placeholder-count="1">
+              <p style="margin:0;max-width:680px;font-size:clamp(17px,1.35vw,20px);line-height:1.62;color:{{ csT.body }};text-wrap:pretty">{{ p }}</p>
+            </sc-for>
+            <sc-if value="{{ c.hasList }}" hint-placeholder-val="{{ false }}">
+              <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;max-width:680px;border-top:1px solid {{ csT.rule }}">
+                <sc-for list="{{ c.listItems }}" as="li" hint-placeholder-count="3">
+                  <li style="display:flex;gap:20px;align-items:baseline;padding:16px 0;border-bottom:1px solid {{ csT.rule }};font-size:clamp(18px,1.5vw,22px);font-weight:500">
+                    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.accent }}">{{ li.n }}</span>{{ li.t }}
+                  </li>
+                </sc-for>
+              </ol>
+            </sc-if>
+            <sc-if value="{{ c.flowTop }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.muted }}">{{ c.flowLabel }}</span>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                  <sc-for list="{{ c.flowItems }}" as="f" hint-placeholder-count="4">
+                    <span style="display:flex;align-items:center;gap:10px">
+                      <span style="padding:10px 14px;border:1px solid {{ csT.rule }};font-size:15px;font-weight:600;line-height:1.3">{{ f.t }}</span>
+                      <sc-if value="{{ f.arrow }}" hint-placeholder-val="{{ true }}"><span style="color:{{ csT.accent }};font-weight:700">→</span></sc-if>
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.hasQuote }}" hint-placeholder-val="{{ false }}">
+              <blockquote style="margin:12px 0;padding:0 0 0 0;display:flex;flex-direction:column;gap:14px;max-width:900px">
+                <sc-if value="{{ c.quoteLabel }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.accent }}">{{ c.quoteLabel }}</span></sc-if>
+                <p style="margin:0;font-weight:700;font-size:clamp(26px,3.2vw,46px);line-height:1.12;letter-spacing:-.02em;color:{{ csT.accent }};text-wrap:balance">“{{ c.quote }}”</p>
+              </blockquote>
+            </sc-if>
+            <sc-if value="{{ c.flowBottom }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.muted }}">{{ c.flowLabel }}</span>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                  <sc-for list="{{ c.flowItems }}" as="f" hint-placeholder-count="4">
+                    <span style="display:flex;align-items:center;gap:10px">
+                      <span style="padding:10px 14px;background:{{ csT.btn }};color:#FFFFFF;font-size:13px;font-weight:700;letter-spacing:.14em">{{ f.t }}</span>
+                      <sc-if value="{{ f.arrow }}" hint-placeholder-val="{{ true }}"><span style="color:{{ csT.accent }};font-weight:700">→</span></sc-if>
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.after }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:0;max-width:680px;font-size:clamp(17px,1.35vw,20px);line-height:1.62;color:{{ csT.body }};text-wrap:pretty">{{ c.after }}</p>
+            </sc-if>
+            <sc-if value="{{ c.hasBlocks }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:{{ c.blockCols }};gap:clamp(24px,3vw,40px)">
+                <sc-for list="{{ c.blockItems }}" as="b" hint-placeholder-count="2">
+                  <div style="display:flex;flex-direction:column;gap:14px;padding-top:22px;border-top:2px solid {{ csT.accent }};min-width:0">
+                    <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:11px;letter-spacing:.16em;color:{{ csT.ink }}">{{ b.label }}</span>
+                    <sc-for list="{{ b.paras }}" as="bp" hint-placeholder-count="0">
+                      <p style="margin:0;font-size:17px;line-height:1.6;color:{{ csT.body }};text-wrap:pretty">{{ bp }}</p>
+                    </sc-for>
+                    <sc-if value="{{ b.hasFlow }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+                        <sc-for list="{{ b.flowItems }}" as="f" hint-placeholder-count="3">
+                          <span style="display:flex;align-items:center;gap:8px">
+                            <span style="padding:8px 12px;border:1px solid {{ csT.rule }};font-size:14px;font-weight:600">{{ f.t }}</span>
+                            <sc-if value="{{ f.arrow }}" hint-placeholder-val="{{ true }}"><span style="color:{{ csT.accent }};font-weight:700">→</span></sc-if>
+                          </span>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ b.img }}" hint-placeholder-val="{{ false }}">
+                      <div data-cursor="VIEW" style="position:relative;aspect-ratio:{{ b.img.ratio }};width:100%;margin-top:6px">
+                        <image-slot id="{{ b.img.id }}" shape="rect" placeholder="{{ b.img.ph }}" style="position:absolute;inset:0"></image-slot>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.closing }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:0;max-width:680px;font-size:clamp(17px,1.35vw,20px);line-height:1.62;color:{{ csT.body }};text-wrap:pretty">{{ c.closing }}</p>
+            </sc-if>
+            <sc-if value="{{ c.img }}" hint-placeholder-val="{{ false }}">
+              <div data-cursor="VIEW" style="position:relative;aspect-ratio:{{ c.img.ratio }};width:100%;margin-top:8px;outline:1px solid {{ csT.rule }};outline-offset:8px">
+                <image-slot id="{{ c.img.id }}" shape="rect" placeholder="{{ c.img.ph }}" style="position:absolute;inset:0"></image-slot>
+              </div>
+            </sc-if>
+          </article>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="max-width:1320px;margin:0 auto;padding:clamp(80px,14vh,160px) clamp(20px,5.5vw,80px) clamp(64px,12vh,120px);border-top:1px solid {{ csRule }};display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:40px">
+      <h2 style="margin:0;font-weight:600;font-size:clamp(44px,6vw,88px);line-height:.9;letter-spacing:-.04em">WHERE TO<br>NEXT?</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:16px">
+        <button type="button" data-cursor="DRIVE" onClick="{{ nextProject }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:56px;padding:14px 26px;background:{{ csT.btn }};border:0;color:#F6F4F8;cursor:pointer;text-align:left">
+          <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:10px;letter-spacing:.16em;color:#E4D9FF">NEXT PROJECT</span>
+          <span style="font-size:16px;font-weight:600;letter-spacing:.1em">{{ nextName }} →</span>
+        </button>
+        <button type="button" data-cursor="GO" onClick="{{ backToMap }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:56px;padding:14px 26px;background:none;border:1px solid {{ csRuleStrong }};color:{{ csInk }};cursor:pointer;text-align:left">
+          <span style="font-family:'Raleway',sans-serif;font-weight:600;font-size:10px;letter-spacing:.16em;opacity:.7">RETURN</span>
+          <span style="font-size:16px;font-weight:600;letter-spacing:.1em">PROJECT MAP</span>
+        </button>
+      </div>
+    </div>
+    </div>
+  </div>
+</sc-if>
+
+<div aria-hidden="true" style="position:fixed;left:0;top:0;z-index:100;pointer-events:none">
+  <div ref="{{ curRing }}" style="position:absolute;left:0;top:0;height:26px;width:26px;box-sizing:border-box;border:1px solid #8247FF;border-radius:13px;display:flex;align-items:center;justify-content:center;transform:translate(-100px,-100px);transition:width .25s ease, padding .25s ease, background .25s ease">
+    <span ref="{{ curLabel }}" style="font-family:'Raleway',sans-serif;font-weight:600;font-size:10px;letter-spacing:.16em;color:#F6F4F8;white-space:nowrap"></span>
+  </div>
+  <div ref="{{ curDot }}" style="position:absolute;left:-2px;top:-2px;width:4px;height:4px;border-radius:50%;background:#F6F4F8;transform:translate(-100px,-100px)"></div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;timeOfDay&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Cinematic mix&quot;,&quot;Daylight&quot;,&quot;Night&quot;],&quot;default&quot;:&quot;Cinematic mix&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;World&quot;},&quot;hudStyle&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Racing game&quot;,&quot;Minimal&quot;],&quot;default&quot;:&quot;Racing game&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;HUD&quot;}}">
+const PROJECTS=[
+  {name:'QUICKURDER',full:'QUICKURDER',route:'ROUTE 01',enter:'NOW ENTERING',sub:'',d:'M400 360 C400 320 300 320 250 290 C190 255 230 205 170 185 C125 170 115 150 130 130',e:[130,130]},
+  {name:'BUMBLEBEE',full:'BUMBLEBEE MEDICAL APP',route:'ROUTE 02',enter:'NOW ENTERING',sub:'MEDICAL APP',d:'M400 360 C400 300 330 290 330 240 C330 200 380 190 370 155 C362 125 320 130 320 100',e:[320,100]},
+  {name:'SYNTERRA',full:'SYNTERRA WEBSITE REDESIGN',route:'ROUTE 03',enter:'ARRIVING AT',sub:'WEBSITE REDESIGN',d:'M400 360 L400 320 L470 280 L470 200 L540 165 L540 130 L500 100',e:[500,100]},
+  {name:'LEXIGO',full:'LEXIGO DYSLEXIA APP',route:'ROUTE 04',enter:'NOW ENTERING',sub:'DESIGNING FOR EASIER READING & INTERACTION',d:'M400 360 C400 270 670 280 670 130',e:[670,130]}
+];
+const SERVICES=[
+  ['UI/UX DESIGN','Designing intuitive digital products by understanding users, structuring information, exploring flows and turning complex problems into clear interfaces.','WIREFRAMES / USER FLOWS / PROTOTYPES'],
+  ['VIDEO EDITING','Creating engaging visual stories through pacing, sequencing, transitions, sound and motion.','TIMELINES / FRAME SEQUENCES / SOUND'],
+  ['GRAPHICS DESIGN','Creating visual communication that turns ideas into clear, engaging and memorable graphics.','POSTERS / COMPOSITIONS / LAYOUT'],
+  ['VIBE CODING','Using AI-assisted development workflows to rapidly turn ideas, interactions and interface concepts into working digital experiences.','IDEAS / CODE / WORKING INTERFACES'],
+  ['UX WRITING','Writing clear, concise interface content that helps people understand what is happening and confidently take the next step.','MICROCOPY / MESSAGES / FLOWS'],
+  ['LOGO DESIGN','Creating distinctive visual identities and marks that communicate the character and positioning of a brand.','GRIDS / MARKS / TYPOGRAPHY / APPLICATIONS']
+];
+const SECTORS=[
+  {lab:'SECTOR 01',sub:'TRACK RECONNAISSANCE',title:'UNDERSTAND',body:'Understand the users, product, context, objectives and constraints.',list:['Research','Stakeholder understanding','Competitor analysis','Existing experience review','Problem discovery']},
+  {lab:'SECTOR 02',sub:'RACE STRATEGY',title:'DEFINE',body:'Turn findings into a clear problem to solve.',list:['Insights','User needs','Journeys','Pain points','Priorities','Problem statements']},
+  {lab:'SECTOR 03',sub:'ENGINEERING',title:'IDEATE',body:'Explore multiple solutions before committing to one line.',list:['Brainstorming','Flows','Sketches','Information architecture','Early concepts'],branch:true},
+  {lab:'SECTOR 04',sub:'PRACTICE LAPS',title:'DESIGN',body:'Three laps, each more refined than the last.',laps:true},
+  {lab:'SECTOR 05',sub:'QUALIFYING',title:'PROTOTYPE & TEST',body:'Build interactive prototypes, observe how people use them and identify where the experience can improve.',tele:true},
+  {lab:'FINAL SECTOR',sub:'FINDING THE BETTER LINE',title:'ITERATE',body:'Every round of feedback is another opportunity to make the experience clearer.',iter:true}
+];
+const CS=[
+  {num:'01',key:'OVERVIEW',title:'Overview',body:'Introduce Lexigo: what it is, who it supports and what you set out to achieve. Two or three sentences is enough.',subs:[]},
+  {num:'02',key:'PROBLEM',title:'The problem',body:'Describe the reading and interaction difficulties Lexigo addresses, and where existing tools fall short.',subs:[]},
+  {num:'03',key:'RESEARCH',title:'Research',body:'Summarise who you spoke to, what you reviewed and the insights that shaped the direction.',subs:[{label:'RESEARCH ARTEFACTS',body:'Interview notes, affinity maps or competitor reviews.',img:'lexigo-research',ratio:'16/9',ph:'Drop research artefacts'}]},
+  {num:'04',key:'PROCESS',title:'Process',body:'Show how the experience was structured before visual design began.',subs:[
+    {label:'USER EXPERIENCE',body:'The principles and decisions behind the experience.'},
+    {label:'USER FLOWS',body:'The primary journeys through the app.',img:'lexigo-flows',ratio:'16/9',ph:'Drop user flows'},
+    {label:'WIREFRAMES',body:'Early layouts used to test structure and hierarchy.',img:'lexigo-wireframes',ratio:'16/10',ph:'Drop wireframes'}]},
+  {num:'05',key:'DESIGN',title:'Design',body:'Show how the visual language supports easier reading.',subs:[
+    {label:'VISUAL EXPLORATION',body:'Type, colour and spacing explorations.',img:'lexigo-visual',ratio:'16/10',ph:'Drop visual exploration'},
+    {label:'FINAL DESIGN',body:'Key screens of the final interface.',img:'lexigo-final',ratio:'16/9',ph:'Drop final screens'},
+    {label:'PROTOTYPE',body:'Link or embed the interactive prototype.',img:'lexigo-prototype',ratio:'16/9',ph:'Drop a prototype capture'}]},
+  {num:'06',key:'OUTCOME',title:'Learnings',body:'Close with what you learned and what you would explore next.',subs:[
+    {label:'LEARNING 01',body:'Add a learning.'},{label:'LEARNING 02',body:'Add a learning.'},{label:'LEARNING 03',body:'Add a learning.'}]}
+];
+const LOC=['STARTING GRID','PURPLE CITY','CREATIVE DISTRICT','TEST CIRCUIT','PROJECT WORLD','FINAL HIGHWAY','FINISH LINE'];
+const pad=n=>String(n).padStart(2,'0');
+
+class Component extends DCLogic {
+  state={phase:'loading',loadStep:0,introLine:0,started:false,seq:null,lights:0,seg:0,service:0,sector:0,sectorP:0,route:null,overlay:null,arriving:null,complete:false,sound:false,menu:false,mobile:typeof window!=='undefined'&&window.innerWidth<900,csSec:0};
+  stageRef=React.createRef();ringRef=React.createRef();speedRef=React.createRef();svcTrack=React.createRef();procTrack=React.createRef();
+  procPath=React.createRef();procDot=React.createRef();flashRef=React.createRef();curDot=React.createRef();curRing=React.createRef();curLabel=React.createRef();
+  csRef=React.createRef();csBar=React.createRef();vigRef=React.createRef();mapPath=React.createRef();mapDot=React.createRef();gaugeArc=React.createRef();gearRef=React.createRef();
+  timers=[];holdV=0;
+
+  T(ms,fn){this.timers.push(setTimeout(fn,ms));}
+  clearT(){this.timers.forEach(clearTimeout);this.timers=[];}
+  ex(fn){if(this.e)fn(this.e);}
+
+  componentDidMount(){
+    this.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if('scrollRestoration' in history)history.scrollRestoration='manual';
+    window.scrollTo(0,0);document.body.style.overflow='hidden';
+    this._scroll=()=>{if(this._sq)return;this._sq=requestAnimationFrame(()=>{this._sq=0;this.onScroll();});};window.addEventListener('scroll',this._scroll,{passive:true});
+    this._resize=()=>{this._segs=null;const m=innerWidth<900;if(m!==this.state.mobile)this.setState({mobile:m});this.onScroll();};window.addEventListener('resize',this._resize);
+    this._kd=e=>{if(e.code==='Space'&&this.state.phase==='hero'&&!this.state.started&&!this.state.seq&&!e.repeat){e.preventDefault();this.holdStart();}};
+    this._ku=e=>{if(e.code==='Space')this.holdEnd();if(e.key==='ArrowLeft'||e.key==='ArrowRight')this.ex(en=>en.setSteer(0));};
+    this._kd2=e=>{if(!this.state.started||this.state.overlay!=null)return;if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key==='ArrowLeft')this.ex(en=>en.setSteer(-1));if(e.key==='ArrowRight')this.ex(en=>en.setSteer(1));};
+    window.addEventListener('keydown',this._kd2);
+    window.addEventListener('keydown',this._kd);window.addEventListener('keyup',this._ku);
+    if(matchMedia('(pointer:fine)').matches)this.initCursor();
+    this.boot();
+  }
+  componentWillUnmount(){
+    this.clearT();window.removeEventListener('scroll',this._scroll);window.removeEventListener('resize',this._resize);
+    window.removeEventListener('keydown',this._kd);window.removeEventListener('keydown',this._kd2);window.removeEventListener('keyup',this._ku);
+    if(this._mm)window.removeEventListener('mousemove',this._mm);cancelAnimationFrame(this._cr);
+    document.body.style.overflow='';if(this.e)this.e.destroy();
+  }
+  boot(){
+    let tries=0;
+    const step=()=>{
+      if(window.THREE&&window.RaceEngine){
+        try{this.e=new window.RaceEngine(this.stageRef.current,{mobile:innerWidth<900,reduced:this.reduced,timeMode:this.timeMode()});
+          let f=0;this.e.onFrame=(k,sn)=>this.hudFrame(k,sn,++f);
+        }catch(err){console.warn('3D unavailable',err);this.e=null;}
+        this.setState({loadStep:1});
+        this.T(450,()=>this.setState({loadStep:2}));
+        this.T(800,()=>(this.reduced||!this.e)?this.skipIntro():this.playIntro());
+        return;
+      }
+      if(++tries>200){this.skipIntro();return;}
+      setTimeout(step,50);
+    };
+    this.T(300,step);
+  }
+  timeMode(){const t=this.props.timeOfDay||'Cinematic mix';return t==='Daylight'?'day':(t==='Night'?'night':'mix');}
+  componentDidUpdate(pp){if(pp.timeOfDay!==this.props.timeOfDay)this.ex(e=>e.setTimeMode(this.timeMode()));}
+  hudFrame(k,sn,f){
+    if(f%3)return;
+    if(this.speedRef.current)this.speedRef.current.textContent=String(Math.round(k)).padStart(3,'0');
+    if(this.gaugeArc.current)this.gaugeArc.current.style.strokeDasharray=(226.2*Math.min(1,k/360)).toFixed(1)+' 301.6';
+    if(this.gearRef.current)this.gearRef.current.textContent=k<3?'N':String(Math.min(6,1+Math.floor(sn*6)));
+    if(this.vigRef.current)this.vigRef.current.style.opacity=String(Math.min(1,Math.max(0,(sn-0.3)*1.6)));
+  }
+  playIntro(){
+    const e=this.e;e.setExposure(0,true);e.cut('wheel');
+    this.setState({phase:'intro',introLine:1});
+    this.T(1000,()=>this.setState({introLine:2}));
+    this.T(2000,()=>{this.setState({introLine:3});e.setExposure(1);});
+    this.T(2700,()=>e.cut('headlight'));
+    this.T(3500,()=>e.cut('carbon'));
+    this.T(4300,()=>e.cut('rear'));
+    this.T(5100,()=>{e.blendTo('hero',1.1);this.setState({introLine:4});});
+    this.T(6300,()=>this.setState({phase:'hero',introLine:0}));
+  }
+  skipIntro=()=>{this.clearT();this.ex(e=>{e.setExposure(1,true);e.cut('hero');});this.setState({phase:'hero',introLine:0});};
+
+  holdStart=(ev)=>{
+    if(ev&&ev.button>0)return;
+    if(this.state.phase!=='hero'||this.state.started||this.state.seq)return;
+    this.holding=true;if(this.state.sound)this.ex(e=>e.audio.enable());
+    if(!this.raf)this.holdLoop();
+  };
+  holdEnd=()=>{this.holding=false;};
+  holdKey=(ev)=>{if(ev.key==='Enter'&&!ev.repeat){ev.preventDefault();this.holdStart();}};
+  noMenu=(ev)=>ev.preventDefault();
+  holdLoop(){
+    let last=performance.now();
+    const tick=now=>{
+      const dt=Math.min(0.05,(now-last)/1000);last=now;
+      const dur=this.reduced?0.5:(this.state.mobile?0.8:1.1);
+      this.holdV=this.holding?Math.min(1,this.holdV+dt/dur):Math.max(0,this.holdV-dt*2.5);
+      if(this.ringRef.current)this.ringRef.current.style.strokeDashoffset=String(163.4*(1-this.holdV));
+      this.ex(e=>e.setRev(this.holdV));
+      if(this.holdV>=1){this.raf=null;this.holding=false;this.beginStart();return;}
+      if(this.holdV<=0&&!this.holding){this.raf=null;return;}
+      this.raf=requestAnimationFrame(tick);
+    };
+    this.raf=requestAnimationFrame(tick);
+  }
+  beginStart(){
+    const fast=this.reduced||this.state.mobile;
+    this.setState({seq:'ready'});
+    this.ex(e=>{e.ignite();e.setRev(0);e.audio.beep(220,0.3,0.04);});
+    const iv=fast?300:450,t0=fast?600:900;
+    this.T(t0,()=>{this.ex(e=>e.blendTo('chase',1.6));this.setState({seq:'lights',lights:0});});
+    for(let i=1;i<=5;i++)this.T(t0+400+i*iv,()=>{this.setState({lights:i});this.ex(e=>e.audio.beep(520,0.14));});
+    const out=t0+400+5*iv+(fast?400:700);
+    this.T(out,()=>{this.setState({lights:0,seq:'out',started:true});this.ex(e=>{e.launch();e.audio.beep(1040,0.3);});this.onScroll();});
+    this.T(out+1100,()=>this.setState({seq:null}));
+    this.T(out+(fast?1500:2400),()=>{document.body.style.overflow='';this.ex(e=>e.release());this.setState({phase:'drive'});this.onScroll();});
+  }
+  quickStart(){
+    this.clearT();this.holdV=0;document.body.style.overflow='';
+    this.setState({started:true,phase:'drive',seq:null,lights:0,introLine:0});
+    this.ex(e=>{e.setExposure(1,true);e.ignite();e.state.started=true;e.release();});
+  }
+  goTo(i){
+    this.setState({menu:false});
+    if(!this.state.started)this.quickStart();
+    requestAnimationFrame(()=>{
+      const el=document.querySelector(`[data-seg="${i}"] [data-anchor]`)||document.querySelector(`[data-seg="${i}"]`);if(!el)return;
+      window.scrollTo({top:el.getBoundingClientRect().top+scrollY,behavior:this.reduced?'auto':'smooth'});
+    });
+  }
+  onScroll(){
+    const vh=innerHeight,y=scrollY,mid=y+vh*0.5;
+    let seg=0,p=0;
+    if(!this._segs||this._segsAt!==document.documentElement.scrollHeight){this._segsAt=document.documentElement.scrollHeight;this._segs=[...document.querySelectorAll('[data-seg]')].map(s=>({top:s.getBoundingClientRect().top+y,h:s.offsetHeight}));}
+    this._segs.forEach((s,i)=>{if(s.top<=mid){seg=i;p=(mid-s.top)/s.h;}});
+    const prog=ref=>{const el=ref.current;if(!el)return 0;const top=el.getBoundingClientRect().top+y;return Math.min(0.9999,Math.max(0,(y-top)/(el.offsetHeight-vh)));};
+    const sp=prog(this.svcTrack),pp=prog(this.procTrack);
+    const service=Math.floor(sp*6),sector=Math.floor(pp*6),sectorP=pp*6-sector;
+    this.updateProcMap(pp);
+    const mp=this.mapPath.current,md=this.mapDot.current;if(mp&&md&&mp.getTotalLength){const L=mp.getTotalLength(),g=Math.min(1,y/Math.max(1,document.documentElement.scrollHeight-vh));mp.style.strokeDasharray=L;mp.style.strokeDashoffset=L*(1-g);const pt=mp.getPointAtLength(g*L);md.setAttribute('cx',pt.x);md.setAttribute('cy',pt.y);}
+    this.ex(e=>e.setJourney({seg,p,service,sector,sectorP,started:this.state.started}));
+    if(seg===6&&p>0.3&&!this.finishing&&this.state.started&&this.state.phase==='drive')this.startFinish();
+    if(seg<6&&this.finishing){this.finishing=false;this.ex(e=>e.resume());if(this.state.complete)this.setState({complete:false});}
+    const ns={};if(seg!==this.state.seg)ns.seg=seg;if(service!==this.state.service)ns.service=service;if(sector!==this.state.sector)ns.sector=sector;
+    const q=sector===4?Math.round(sectorP*5)/5:(sector===3?Math.floor(sectorP*3)/3:(sector===2?(sectorP>0.45?0.5:0):0));if(q!==this.state.sectorP)ns.sectorP=q;
+    if(Object.keys(ns).length)this.setState(ns);
+  }
+  updateProcMap(pp){
+    const path=this.procPath.current,dot=this.procDot.current;if(!path||!dot||!path.getTotalLength)return;
+    const L=path.getTotalLength();path.style.strokeDasharray=L;path.style.strokeDashoffset=L*(1-pp);
+    const pt=path.getPointAtLength(pp*L);dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);
+  }
+  startFinish(){
+    this.finishing=true;
+    if(this.e)this.e.finishLine(()=>this.onCross());else this.onCross();
+  }
+  onCross(){
+    const f=this.flashRef.current;
+    if(f&&!this.reduced){f.style.transition='none';f.style.opacity='0.85';void f.offsetWidth;f.style.transition='opacity 1.4s ease-out';f.style.opacity='0';}
+    this.ex(e=>e.silence());
+    this.T(1400,()=>{if(this.finishing)this.setState({complete:true});});
+  }
+  raceAgain=()=>{
+    this.clearT();this.finishing=false;this.holdV=0;
+    if(this.ringRef.current)this.ringRef.current.style.strokeDashoffset='163.4';
+    this.setState({complete:false,started:false,seq:null,phase:'hero',route:null,lights:0},()=>{
+      window.scrollTo(0,0);document.body.style.overflow='hidden';this.ex(e=>e.reset());this.onScroll();});
+  };
+  select(i){this.setState({route:i,csIdx:i});this.ex(e=>e.audio.click());this.preload(i);}
+  preload(i){const c=(window.CASES||{})[PROJECTS[i].name];if(c&&c.hero&&c.hero.src){const im=new Image();im.decoding='async';im.src=c.hero.src;if(im.decode)im.decode().catch(()=>{});}}
+  drive=()=>{if(this.transit)return;const i=this.state.route!=null?this.state.route:(this.state.mobile?0:null);if(i==null)return;this.travelTo(i);};
+  travelTo(i,fromProject){
+    if(this.transit&&!fromProject)return;this.transit=true;
+    const P=PROJECTS[i],R=this.reduced,cd=(window.CASES||{})[P.name];
+    const dest=cd&&cd.dest?cd.dest:{zone:'world',shot:'dest',speed:10,lane:0};
+    this.preload(i);
+    this.setState({transit:true,csIdx:i,route:i,arriving:{label:'DESTINATION SET',name:P.name,sub:P.route+' / 04'}});
+    document.body.style.overflow='hidden';
+    this.ex(e=>{e.setAmbient(false);e.travel(true);});
+    // phase 2: switch the world to the destination while at speed
+    this.T(R?150:650,()=>{this.ex(e=>e.setDestination(dest));this.setState({arriving:{label:P.enter,name:P.name,sub:P.sub}});});
+    // phase 3: brake + camera swings to the arrival shot
+    this.T(R?300:1900,()=>this.ex(e=>e.arrive()));
+    // phase 4: case study fades in over the parked car
+    this.T(R?450:2900,()=>{
+      const el=this.csRef.current;if(el)el.scrollTop=0;if(this.csBar.current)this.csBar.current.style.transform='scaleX(0)';
+      this.setState({overlay:i,arriving:null,csSec:0});
+      this.T(900,()=>{this.ex(e=>e.setAmbient(true));this.transit=false;});
+    });
+  }
+  backToMap=()=>{
+    if(this.transit)return;this.transit=true;const R=this.reduced;
+    this.setState({overlay:null});
+    this.ex(e=>e.setAmbient(false));
+    this.T(R?100:450,()=>{this.setState({arriving:{label:'RETURNING TO',name:'PROJECT WORLD',sub:''}});this.ex(e=>{e.setDestination(null);e.travel(true);});});
+    this.T(R?400:2000,()=>{this.ex(e=>e.release());this.setState({arriving:null,transit:false});document.body.style.overflow='';this.transit=false;});
+  };
+  nextProject=()=>{
+    if(this.transit)return;const n=(this.state.overlay+1)%4;
+    this.setState({overlay:null});this.ex(e=>e.setAmbient(false));
+    this.T(this.reduced?100:450,()=>this.travelTo(n,true));
+    this.transit=true;
+  };
+  csScroll=(ev)=>{
+    const el=ev.currentTarget,max=el.scrollHeight-el.clientHeight;
+    if(this.csBar.current)this.csBar.current.style.transform=`scaleX(${max>0?el.scrollTop/max:0})`;
+    let a=0;el.querySelectorAll('[data-cs]').forEach((s,i)=>{if(s.getBoundingClientRect().top<el.clientHeight*0.45)a=i;});
+    if(a!==this.state.csSec)this.setState({csSec:a});
+  };
+  csJump(i){
+    const el=this.csRef.current;if(!el)return;const s=el.querySelectorAll('[data-cs]')[i];if(!s)return;
+    el.scrollTo({top:s.getBoundingClientRect().top-el.getBoundingClientRect().top+el.scrollTop-100,behavior:this.reduced?'auto':'smooth'});
+  }
+  initCursor(){
+    document.documentElement.classList.add('ce-cursor');
+    let x=-100,y=-100,rx=x,ry=y;
+    this._mm=e=>{x=e.clientX;y=e.clientY;
+      const t=e.target&&e.target.closest?e.target.closest('[data-cursor]'):null,lab=t?t.getAttribute('data-cursor'):'';
+      if(lab!==this._lab){this._lab=lab;const L=this.curLabel.current,R=this.curRing.current;
+        if(L)L.textContent=lab;if(R){R.style.width=lab?(lab.length*8+28)+'px':'26px';R.style.background=lab?'rgba(7,6,10,.75)':'transparent';}}};
+    window.addEventListener('mousemove',this._mm);
+    const tick=()=>{rx+=(x-rx)*0.24;ry+=(y-ry)*0.24;
+      if(this.curDot.current)this.curDot.current.style.transform=`translate(${x}px,${y}px)`;
+      if(this.curRing.current)this.curRing.current.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      this._cr=requestAnimationFrame(tick);};
+    tick();
+  }
+
+  renderVals(){
+    const s=this.state,mob=s.mobile;
+    const NAV=[['ABOUT',1],['WHAT I DO',2],['PROCESS',3],['PROJECTS',4],['WORK WITH ME',5]];
+    const nav=NAV.map(([l,i])=>({label:l,num:pad(i+1),color:s.seg===i?'#F6F4F8':'#AAA5AF',bar:s.seg===i?'1':'0',go:()=>this.goTo(i)}));
+    const live=(s.phase==='hero'||s.phase==='drive')&&!s.complete&&s.overlay==null&&!s.transit;
+    const heroOn=s.phase==='hero'&&!s.started&&!s.seq;
+    const introT=['','SYSTEM INITIALISING','DRIVER PROFILE FOUND','CLAIRE ERHUANGA'];
+    const introLines=s.phase==='intro'?[1,2,3].map(i=>({t:introT[i],op:s.introLine>=i&&s.introLine<4?(i===s.introLine?1:0.35):0,color:i===3?'#C7AEFF':'#AAA5AF'})):[];
+    const services=SERVICES.map(([t,d,tags],i)=>({num:pad(i+1),title:t,desc:d,tags,short:pad(i+1)+' '+t,
+      op:i===s.service?1:0,ty:i===s.service?'0px':(i<s.service?'-28px':'28px'),
+      idxColor:i===s.service?'#F6F4F8':'#726D79',idxBar:i===s.service?'#8247FF':'rgba(246,244,248,.14)'}));
+    const sectors=SECTORS.map((x,i)=>Object.assign({},x,{hasList:!!x.list,listStr:x.list?x.list.join('  /  ').toUpperCase():'',branch:!!x.branch,laps:!!x.laps,tele:!!x.tele,iter:!!x.iter,
+      op:i===s.sector?1:0,ty:i===s.sector?'0px':(i<s.sector?'-28px':'28px')}));
+    const lapA=s.sector===3?Math.min(2,Math.floor(s.sectorP*3)):-1;
+    const laps=[['LAP 01','Wireframes'],['LAP 02','Visual exploration'],['LAP 03','High-fidelity interface']].map(([n,t],i)=>({n,t,
+      line:i<=lapA?'#8247FF':'rgba(246,244,248,.14)',color:i<=lapA?'#A15CFF':'#726D79',text:i===lapA?'#F6F4F8':'#AAA5AF'}));
+    const TV=[0.82,0.36,0.7,0.88,0.64];
+    const tele=['TASK FLOW','FRICTION','FEEDBACK','USABILITY','BEHAVIOUR'].map((k,i)=>({k,w:(s.sector===4?Math.max(0,Math.min(1,s.sectorP*1.6-i*0.12))*TV[i]*100:0)+'%'}));
+    const routes=PROJECTS.map((p,i)=>({name:p.name,route:p.route,d:p.d,ex:String(p.e[0]),ey:String(p.e[1]),
+      stroke:s.route===i?'#8247FF':'#3A3542',sw:s.route===i?'4px':'2.5px',op:s.route==null||s.route===i?1:0.45,
+      glow:s.route===i?'drop-shadow(0 0 8px rgba(130,71,255,.9))':'none',dot:s.route===i?'#A15CFF':'#4A4552',
+      left:(p.e[0]/8)+'%',top:(p.e[1]/5.2)+'%',labelColor:s.route===i?'#F6F4F8':'#AAA5AF',pressed:s.route===i?'true':'false',pick:()=>this.select(i)}));
+    const sel=s.route!=null?PROJECTS[s.route]:null;
+    const mi=s.route!=null?s.route:0,mp=PROJECTS[mi];
+    const cIdx=s.overlay!=null?s.overlay:(s.csIdx!=null?s.csIdx:null);const ov=cIdx!=null?PROJECTS[cIdx]:null;const csVis=s.overlay!=null;
+    const arr=s.arriving||{label:'',name:'',sub:''};
+    const CASES=window.CASES||{};const csD=ov?CASES[ov.name]:null;
+    const csT=csD?csD.theme:{bg:'#0D0A11',ink:'#F6F4F8',body:'#C9C4CF',muted:'#8C8693',rule:'rgba(246,244,248,.12)',accent:'#A15CFF'};
+    const steps=arr=>(arr||[]).map((t,i,a)=>({t,arrow:i<a.length-1}));
+    const csSecs=csD?csD.sections.map(c=>({num:c.num,key:c.key,title:c.title,paras:c.paras||[],
+      hasList:!!c.list,listItems:(c.list||[]).map((t,i)=>({t,n:pad(i+1)})),
+      flowTop:!!c.flow&&!c.flowAfterQuote,flowBottom:!!c.flow&&!!c.flowAfterQuote,flowLabel:c.flowLabel||'',flowItems:steps(c.flow),
+      hasQuote:!!c.quote,quote:c.quote||'',quoteLabel:c.quoteLabel||'',after:c.after||'',closing:c.closing||'',img:c.img||null,
+      hasBlocks:!!(c.blocks&&c.blocks.length),blockCols:mob?'minmax(0,1fr)':(c.grid?'repeat(auto-fit,minmax(200px,1fr))':'repeat(auto-fit,minmax(min(100%,320px),1fr))'),
+      blockItems:(c.blocks||[]).map(b=>({label:b.label,paras:b.body?b.body.split('\n\n'):[],hasFlow:!!b.flow,flowItems:steps(b.flow),img:b.img||null}))})):[];
+    return {
+      stageRef:this.stageRef,ringRef:this.ringRef,speedRef:this.speedRef,svcTrack:this.svcTrack,procTrack:this.procTrack,procPath:this.procPath,procDot:this.procDot,
+      flashRef:this.flashRef,curDot:this.curDot,curRing:this.curRing,curLabel:this.curLabel,csRef:this.csRef,csBar:this.csBar,
+      heroOp:heroOn?1:0,heroTY:heroOn?'0px':'14px',heroPE:heroOn?'auto':'none',
+      scrollHintOp:s.started&&s.seg===0&&s.phase==='drive'?1:0,
+      holdStart:this.holdStart,holdEnd:this.holdEnd,holdKey:this.holdKey,noMenu:this.noMenu,
+      services,sectors,laps,tele,branchColor:s.sector===2&&s.sectorP>0.45?'#8247FF':'#3A3542',
+      procTop:mob?'38%':'50%',sectorCount:`SECTOR ${pad(s.sector+1)} / 06`,
+      routes,desktopMap:!mob,mobileMap:mob,
+      hudName:sel?sel.name:'SELECT A ROUTE',hudNameColor:sel?'#F6F4F8':'#726D79',hudRoute:sel?`${sel.route} / 04`:'ROUTE — / 04',
+      hudStatus:sel?'READY':'STANDBY',hudStatusColor:sel?'#A15CFF':'#726D79',driveOp:sel?1:0.35,driveDisabled:sel?'false':'true',drive:this.drive,
+      mSel:{name:mp.name,d:mp.d,routeOf:`${mp.route} / 04`,slot:'preview-'+mp.name.toLowerCase()},
+      prevRoute:()=>this.select((mi+3)%4),nextRoute:()=>this.select((mi+1)%4),
+      tStart:e=>{this._tx=e.touches[0].clientX;},tEnd:e=>{const dx=e.changedTouches[0].clientX-(this._tx||0);if(Math.abs(dx)>40)this.select((mi+(dx<0?1:3))%4);},
+      continueJourney:()=>this.goTo(5),
+      nav,desktopNav:!mob,mobileNav:mob,counter:pad(Math.min(6,s.seg+1)),
+      goTop:()=>{if(s.started)window.scrollTo({top:0,behavior:this.reduced?'auto':'smooth'});},
+      openMenu:()=>this.setState({menu:true}),closeMenu:()=>this.setState({menu:false}),menu:s.menu,
+      hudOp:live?1:0,hudDriveOp:live&&(s.started||s.seq)?1:0,hudPE:live?'auto':'none',
+      location:csVis||s.transit?(ov?ov.name:LOC[s.seg]):LOC[s.seg],
+      sound:s.sound?'true':'false',soundLabel:s.sound?'SOUND ON':'SOUND OFF',soundColor:s.sound?'#C7AEFF':'#AAA5AF',
+      toggleSound:()=>{const on=!s.sound;this.setState({sound:on});this.ex(e=>on?e.audio.enable():e.audio.disable());},
+      loaderOp:s.phase==='loading'?1:0,loaderPE:s.phase==='loading'?'auto':'none',
+      loadText:['PREPARING VEHICLE','LOADING ENVIRONMENT','READY'][s.loadStep],loadW:['24%','66%','100%'][s.loadStep],
+      introLines,showSkip:s.phase==='intro',skipIntro:this.skipIntro,
+      readyOp:s.seq==='ready'?1:0,lightsOp:s.seq==='lights'?1:0,outOp:s.seq==='out'?1:0,
+      lights:[0,1,2,3,4].map(i=>({bg:i<s.lights?'#A15CFF':'rgba(246,244,248,.1)',glow:i<s.lights?'0 0 28px #8247FF':'none'})),
+      arriveOp:s.arriving?1:0,arrive:arr,
+      complete:s.complete,raceAgain:this.raceAgain,
+      csOpen:cIdx!=null,csHidden:csVis?'false':'true',csOp:csVis?1:0,csVisib:csVis?'visible':'hidden',csPE:csVis?'auto':'none',csTY:csVis?'0px':'28px',csTr:csVis?'opacity .8s ease, transform 1s cubic-bezier(.2,.7,.2,1), visibility 0s':'opacity .45s ease, transform .45s ease, visibility 0s linear .45s',
+      mainOp:s.transit||csVis?0:1,
+      cs:csD?{title:csD.title,sub:csD.sub,route:ov.route,meta:csD.meta,heroId:csD.hero.id,heroSrc:csD.hero.src,heroRatio:csD.hero.src?'2200/1616':'16/9'}:{title:'',sub:'',route:'',meta:[],heroId:'x',heroSrc:'',heroRatio:'16/9'},
+      csT:csT,csBg:csT.bg,csInk:csT.ink,csRule:csT.rule,csRuleStrong:csT.rule.replace(/[\d.]+\)$/,'.35)'),
+      csTopLabel:ov?'PROJECT / '+ov.name:'',
+      csNav:csSecs.map((c,i)=>({num:c.num,key:c.key,color:i===s.csSec?csT.accent:csT.muted,w:i===s.csSec?'24px':'10px',go:()=>this.csJump(i)})),
+      csSections:csSecs,csCols:mob?'minmax(0,1fr)':'200px minmax(0,1fr)',
+      csIndicator:csSecs.length?`${pad(Math.min(s.csSec,csSecs.length-1)+1)} / ${pad(csSecs.length)} — ${csSecs[Math.min(s.csSec,csSecs.length-1)].key}`:'',
+      csScroll:this.csScroll,backToMap:this.backToMap,nextProject:this.nextProject,
+      nextName:ov?PROJECTS[(cIdx+1)%4].name:'',
+      vigRef:this.vigRef,mapPath:this.mapPath,mapDot:this.mapDot,gaugeArc:this.gaugeArc,gearRef:this.gearRef,
+      hudGame:(this.props.hudStyle||'Racing game')==='Racing game',hudMinimal:(this.props.hudStyle||'Racing game')!=='Racing game',
+      showSteer:s.started&&!mob&&s.phase==='drive',
+      mapSize:mob?'64px':'92px',gaugeSize:mob?'92px':'124px',gaugeFont:mob?'22px':'30px',
+      ticks:Array.from({length:10},(_,i)=>{const a=(135+i*30)*Math.PI/180,c=Math.cos(a),sn=Math.sin(a);return {x1:(60+c*38).toFixed(1),y1:(60+sn*38).toFixed(1),x2:(60+c*42).toFixed(1),y2:(60+sn*42).toFixed(1),c:i>=8?'#A15CFF':'rgba(246,244,248,.35)'};}),
+      mapNodes:[[50,94],[24,78],[38,54],[74,40],[72,14],[26,16]].map(([x,y],i)=>({x:String(x),y:String(y),fill:i<=s.seg?'#C7AEFF':'rgba(246,244,248,.3)'}))
+    };
+  }
+}
+
+</script>
+</body>
+</html>
